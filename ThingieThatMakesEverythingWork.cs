@@ -29,18 +29,22 @@ public class ThingieThatMakesEverythingWork : MonoBehaviour
     [SerializeField] private Button mainButton;
     [SerializeField] private TextMeshProUGUI mainButtonText;
     [SerializeField] private TextMeshProUGUI overheadText;
+    [SerializeField] private Button nextButtonButton;
 
     // the following will be used as the newspaper article selection interface:
+    [SerializeField] private Image articleParent;
     [SerializeField] private Image newspaperBackground;
     [SerializeField] private Button TabloidAddSpace;
     [SerializeField] private Image TabloidAdImage;
 
     [SerializeField] private Button MainArticleSpace;
     [SerializeField] private Image MainArticleImage;
-
     [SerializeField] private Button SideStorySpace;
     [SerializeField] private Image SideStoryImage;
-    [SerializeField] private Button nextButtonButton;
+
+    [SerializeField] private Button StackOfMainArticles;
+    [SerializeField] private Button StackOfSideArticles;
+    [SerializeField] private Button StackOfTabloids;
 
     private int spacesFilled = 0;
 
@@ -53,6 +57,10 @@ public class ThingieThatMakesEverythingWork : MonoBehaviour
     
     private bool choiceOneSelected = false;
     private bool choiceTwoSelected = false;
+    
+    private bool mArticleChoosen = false;
+    private bool sArticleChoosen = false;
+    private bool tSelected = false;
 
 
 //I hope this code makes it to Github
@@ -80,7 +88,7 @@ public class ThingieThatMakesEverythingWork : MonoBehaviour
         }
         else if(buttonPress == 2)
         {
-            newspaperBackground.gameObject.SetActive(true);
+            articleParent.gameObject.SetActive(true);
         }
     }
     
@@ -139,7 +147,7 @@ public class ThingieThatMakesEverythingWork : MonoBehaviour
             }
             else if(storyLine == 4)
             {
-                storyText.text = "Anyway, all you need to is to select which stories and advertisements will run in paper each month.";
+                storyText.text = "Anyways, all you need to do is to select which stories and advertisements will run in paper each month.";
             }
             else if(storyLine == 5)
             {
@@ -189,6 +197,7 @@ public class ThingieThatMakesEverythingWork : MonoBehaviour
             overheadText.text = "December 18, XX83, You pull out a stack of proposed articles and get ready to distribute the front page space of next month's issue.";
             buttonPress = 2;
             mainButton.gameObject.SetActive(true);
+            mainButtonText.text = "Start Working.";
         }
     
     }
@@ -230,8 +239,10 @@ public class ThingieThatMakesEverythingWork : MonoBehaviour
     //these are for the image buttons of available article slots
     public void mainArticleSelected(){
         overheadText.gameObject.SetActive(false);
-        if(mArticleChoosen == false){
-            stackOfMainArticles.gameObject.SetActive(true);
+        if(!mArticleChoosen){
+            StackOfSideArticles.gameObject.SetActive(false);
+            StackOfTabloids.gameObject.SetActive(false);
+            StackOfMainArticles.gameObject.SetActive(true);
         }
         else{
             overheadText.gameObject.SetActive(true);
@@ -240,8 +251,10 @@ public class ThingieThatMakesEverythingWork : MonoBehaviour
     }
     public void secondaryArticleSelected(){
         overheadText.gameObject.SetActive(false);
-        if(sArticleChoosen == false){
-            stackofSideArticles.gameObject.SetActive(true);
+        if(!sArticleChoosen){
+            StackOfMainArticles.gameObject.SetActive(false);
+            StackOfTabloids.gameObject.SetActive(false);
+            StackOfSideArticles.gameObject.SetActive(true);
         }
         else{
             overheadText.gameObject.SetActive(true);
@@ -250,8 +263,10 @@ public class ThingieThatMakesEverythingWork : MonoBehaviour
     }
     public void tabloidSelected(){
         overheadText.gameObject.SetActive(false);
-        if(tSelected == false){
-            stackofTabloidSelected.gameObject.SetActive(true);
+        if(!tSelected){
+            StackOfMainArticles.gameObject.SetActive(false);
+            StackOfSideArticles.gameObject.SetActive(false);
+            StackOfTabloids.gameObject.SetActive(true);
         }
         else{
             overheadText.gameObject.SetActive(true);
@@ -261,9 +276,12 @@ public class ThingieThatMakesEverythingWork : MonoBehaviour
 
     //this is the button to end the newspaper selection section 
     public void done(){
-        if(mArticleChoosen == true %% sArticleChoosen == true && tabloidSelected == true){
+        if(mArticleChoosen && sArticleChoosen && tSelected){
             hideAllArticleStuff();
             ContinueStory();
         }
+    }
+    void hideAllArticleStuff(){
+        articleParent.gameObject.SetActive(false);
     }
 }
