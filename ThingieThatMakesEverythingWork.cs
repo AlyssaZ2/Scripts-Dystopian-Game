@@ -17,6 +17,7 @@ public class ThingieThatMakesEverythingWork : MonoBehaviour
     [SerializeField] private Image textBox;
     [SerializeField] private TextMeshProUGUI storyText;
     [SerializeField] private TextMeshProUGUI speakerName;
+    [SerializeField] private TextMeshProUGUI dollarCounter;
 
     [SerializeField] private TextMeshProUGUI choiceOne;
     [SerializeField] private TextMeshProUGUI choiceTwo;
@@ -39,6 +40,7 @@ public class ThingieThatMakesEverythingWork : MonoBehaviour
 
     [SerializeField] private Button SideStorySpace;
     [SerializeField] private Image SideStoryImage;
+    [SerializeField] private Button nextButtonButton;
 
     private int spacesFilled = 0;
 
@@ -48,6 +50,9 @@ public class ThingieThatMakesEverythingWork : MonoBehaviour
     private string optionTwo;
 
     private int buttonPress = 0;
+    
+    private bool choiceOneSelected = false;
+    private bool choiceTwoSelected = false;
 
 
 //I hope this code makes it to Github
@@ -75,7 +80,7 @@ public class ThingieThatMakesEverythingWork : MonoBehaviour
         }
         else if(buttonPress == 2)
         {
-            newspaperBackground.SetActive(true);
+            newspaperBackground.gameObject.SetActive(true);
         }
     }
     
@@ -124,6 +129,8 @@ public class ThingieThatMakesEverythingWork : MonoBehaviour
             }
             else if(storyLine == 2)
             {
+                choiceOneSelected = false;
+                choiceTwoSelected = false;
                 storyText.text = "I'm glad to hear that you are just as excited as me!!!";
             }
             else if(storyLine == 3)
@@ -136,7 +143,7 @@ public class ThingieThatMakesEverythingWork : MonoBehaviour
             }
             else if(storyLine == 5)
             {
-                storyText.text = "Just make sure nothing crude, offensive, or treasonous end up in the paper, or it'll be off with our heads! Hohoho.";
+                storyText.text = "Just make sure nothing crude, offensive, or treasonous ends up in the paper, or it'll be off with our heads! Hohoho.";
             }
             else if(storyLine == 6)
             {
@@ -154,7 +161,7 @@ public class ThingieThatMakesEverythingWork : MonoBehaviour
             {
                 storyText.text = "I'm off on my vacation now! Hohoho!";
             }
-            else if(storyText.text == 10)
+            else if(storyLine == 10)
             {
                 speakerName.text="";
                 storyText.text = "*bzzt The line goes dead";
@@ -189,20 +196,74 @@ public class ThingieThatMakesEverythingWork : MonoBehaviour
     void showChoices()
     {
         Debug.Log("The choices are shown.");
-        //This could be the issue-"while"
-        while (pauseStory == true)
+        if (pauseStory == true)
         {
+            nextButtonButton.gameObject.SetActive(false);
             choiceOneButton.gameObject.SetActive(true);
             choiceTwoButton.gameObject.SetActive(true);
             choiceOne.text = optionOne;
             choiceTwo.text = optionTwo;
         }
     }
-    public void choiceChosen()
+    public void choiceOneChosen()
     {
-        Debug.Log("A choice was choosen.");
+        Debug.Log("The first choice was choosen.");
         choiceOneButton.gameObject.SetActive(false);
         choiceTwoButton.gameObject.SetActive(false);
         pauseStory = false;
+        choiceOneSelected = true;
+        nextButtonButton.gameObject.SetActive(true);
+        storyLine = storyLine + 1;
+        ContinueStory();
+    }
+    public void choiceTwoChosen(){
+        Debug.Log("The second choice was choosen.");
+        choiceOneButton.gameObject.SetActive(false);
+        choiceTwoButton.gameObject.SetActive(false);
+        pauseStory = false;
+        nextButtonButton.gameObject.SetActive(true);
+        choiceTwoSelected = true;
+        storyLine = storyLine + 1;
+        ContinueStory();
+    }
+
+    //these are for the image buttons of available article slots
+    public void mainArticleSelected(){
+        overheadText.gameObject.SetActive(false);
+        if(mArticleChoosen == false){
+            stackOfMainArticles.gameObject.SetActive(true);
+        }
+        else{
+            overheadText.gameObject.SetActive(true);
+            overheadText.text = "This article has already been choosen.";
+        }
+    }
+    public void secondaryArticleSelected(){
+        overheadText.gameObject.SetActive(false);
+        if(sArticleChoosen == false){
+            stackofSideArticles.gameObject.SetActive(true);
+        }
+        else{
+            overheadText.gameObject.SetActive(true);
+            overheadText.text = "This article has already been choosen.";
+        }
+    }
+    public void tabloidSelected(){
+        overheadText.gameObject.SetActive(false);
+        if(tSelected == false){
+            stackofTabloidSelected.gameObject.SetActive(true);
+        }
+        else{
+            overheadText.gameObject.SetActive(true);
+            overheadText.text = "This article has already been choosen.";
+        }
+    }
+
+    //this is the button to end the newspaper selection section 
+    public void done(){
+        if(mArticleChoosen == true %% sArticleChoosen == true && tabloidSelected == true){
+            hideAllArticleStuff();
+            ContinueStory();
+        }
     }
 }
